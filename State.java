@@ -18,25 +18,21 @@ public class State {
     }
 
     public Optional<State> next() {
-        Optional<Pair<Optional<Event>, PQ<Event>>> optionalPair =
-                Optional.of(pq.poll());
+        Pair<Optional<Event>, PQ<Event>> polled = pq.poll();
 
-        return optionalPair.flatMap(currPair -> {
-            Optional<Event> currEvent = currPair.t();
-            PQ<Event> currPQ = currPair.u();
+        Optional<Event> currEvent = polled.t();
+        PQ<Event> currPQ = polled.u();
 
-            return currEvent.flatMap(event ->
-                    event.next(this.shop).map(nextPair -> {
-                        Optional<Event> nextEvent = nextPair.t();
-                        Shop newShop = nextPair.u();
-                        PQ<Event> newPQ = nextEvent
-                                .map(e -> currPQ.add(e))
-                                .orElse(currPQ);
+        return currEvent.flatMap(event ->
+                event.next(this.shop).flatMap(nextPair -> {
+                    Optional<Event> nextEvent = nextPair.t();
+                    Shop newShop = nextPair.u();
 
-                        return new State(newPQ, newShop, Optional.of(event));
-                    })
-            ).or(() -> Optional.of(new State(currPQ, shop, Optional.empty())));
-        });
+                    return nextEvent
+                        .map(e -> new State(currPQ.add(e), newShop, Optional.of(event)))
+                        .or(() -> Optional.of(new State(currPQ, newShop, Optional.of(event))));
+                })
+        ).or(() -> Optional.of(new State(currPQ, shop, Optional.empty())));
     }
 
     public boolean isEmpty() {
@@ -46,11 +42,4 @@ public class State {
     public Optional<Event> getEvent() {
         return event;
     }
-
-    /*
-    @Override
-    public String toString() {
-        return event.map(e -> e.toString()).orElse("");
-    }
-     */
 }

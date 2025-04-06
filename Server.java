@@ -41,7 +41,7 @@ public class Server {
 
     public Boolean canWait(Customer customer) {
         //return this.qsize < this.qmax && customer.canBeServed(this.nextAvailableTime);
-        return this.qsize < this.qmax;
+        return this.qsize <= this.qmax;
     }
 
     public Server pushQueue() {
@@ -50,6 +50,10 @@ public class Server {
 
     public double getNextAvailableTime() {
         return this.nextAvailableTime;
+    }
+
+    public int getQsize() {
+        return this.qsize;
     }
 
     public Boolean isServer(Server server) {

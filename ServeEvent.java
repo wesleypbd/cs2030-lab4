@@ -16,7 +16,7 @@ public class ServeEvent extends Event {
                 Optional.of(new DoneEvent(customer, doneTime, updatedServer)),
                 updatedShop));
     }
-    
+
     @Override
     public Pair<Double, Integer> updateStats(Pair<Double, Integer> stats) {
         double totalWaitTime = stats.t() + (eventTime - customer.getArrivalTime());
