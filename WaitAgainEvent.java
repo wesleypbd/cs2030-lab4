@@ -10,13 +10,14 @@ public class WaitAgainEvent extends Event {
 
     @Override
     public Optional<Pair<Optional<Event>, Shop>> next(Shop shop) {
-        return shop.findServer(customer, server)
+        return shop.findServer(eventTime, server)
                 .flatMap(currentServer -> {
                     if (currentServer.getNextAvailableTime() <= this.eventTime) {
                         // Serve the customer as the server is available
                         Server updatedServer = currentServer.popQueue();
                         Shop updatedShop = shop.update(updatedServer);
-                        Event serveEvent = new ServeEvent(customer,
+                        Event serveEvent = new ServeEvent(
+                                customer,
                                 eventTime,
                                 updatedServer);
                         return Optional.of(new Pair<>(Optional.of(serveEvent), updatedShop));
@@ -29,8 +30,8 @@ public class WaitAgainEvent extends Event {
                         );
                         return Optional.of(new Pair<>(Optional.of(waitAgainEvent), shop));
                     }
-                })
-                .or(() -> Optional.empty());
+                });
+                //.or(() -> Optional.empty());
     }
 
     @Override

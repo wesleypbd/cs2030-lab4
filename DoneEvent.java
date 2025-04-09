@@ -10,8 +10,8 @@ public class DoneEvent extends Event {
 
     @Override
     public Optional<Pair<Optional<Event>, Shop>> next(Shop shop) {
-        Shop updatedShop = shop.update(new Server(server));
-        return Optional.of(new Pair<>(Optional.empty(), updatedShop));
+        //Shop updatedShop = shop.update(new Server(server));
+        return Optional.of(new Pair<>(Optional.empty(), shop));
     }
 
     @Override

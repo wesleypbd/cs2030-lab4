@@ -31,21 +31,24 @@ public class Server {
         return new Server(this, this.qsize, doneTime);
     }
 
-    public Server popQueue() {
-        return new Server(this, this.qsize - 1, this.nextAvailableTime);
-    }
-
     public Boolean canServe(Customer customer) {
         return customer.canBeServed(this.nextAvailableTime);
     }
 
-    public Boolean canWait(Customer customer) {
-        //return this.qsize < this.qmax && customer.canBeServed(this.nextAvailableTime);
-        return this.qsize <= this.qmax;
+    public Boolean canServe(double atTime) {
+        return atTime >= this.nextAvailableTime;
     }
 
     public Server pushQueue() {
         return new Server(this, this.qsize + 1, this.nextAvailableTime);
+    }
+
+    public Server popQueue() {
+        return new Server(this, this.qsize - 1, this.nextAvailableTime);
+    }
+
+    public Boolean canWait() {
+        return this.qsize < this.qmax;
     }
 
     public double getNextAvailableTime() {
@@ -61,6 +64,7 @@ public class Server {
     }
 
     public String toString() {
+        //return "server " + this.id + ": " +qsize; // Change back
         return "server " + this.id;
     }
 }

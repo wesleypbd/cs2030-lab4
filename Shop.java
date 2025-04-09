@@ -32,15 +32,15 @@ public class Shop {
                 .findFirst();
     }
 
-    public Optional<Server> findServer(Customer customer, Server oldServer) {
+    public Optional<Server> findServer(double eventTime, Server oldServer) {
         return servers.stream()
-                .filter(server -> server.canServe(customer) && server.isServer(oldServer))
+                .filter(server -> server.isServer(oldServer))
                 .findFirst();
     }
 
     public Optional<Server> findQueue(Customer customer) {
         return servers.stream()
-                .filter(server -> server.canWait(customer))
+                .filter(server -> server.canWait())
                 .findFirst();
     }
 

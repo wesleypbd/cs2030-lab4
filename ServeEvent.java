@@ -26,6 +26,6 @@ public class ServeEvent extends Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f %s serve by %s", eventTime, customer, server);
+        return String.format("%.3f %s serves by %s", eventTime, customer, server);
     }
 }

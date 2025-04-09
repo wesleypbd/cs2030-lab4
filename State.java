@@ -22,24 +22,35 @@ public class State {
 
     public Optional<State> next() {
         Pair<Optional<Event>, PQ<Event>> polled = pq.poll();
+        //System.out.println(pq);
 
         Optional<Event> currEvent = polled.t();
+        //System.out.println(currEvent);
         PQ<Event> currPQ = polled.u();
 
-        return currEvent.flatMap(event ->
+        Optional<State> result = currEvent.flatMap(event ->
                 event.next(this.shop).flatMap(nextPair -> {
                     Optional<Event> nextEvent = nextPair.t();
                     Shop newShop = nextPair.u();
-
+                    //System.out.println("Event: " + event);
+                    //System.out.println("Shop: " + this.shop);
                     return nextEvent
-                        .map(e -> new State(currPQ.add(e), newShop, Optional.of(event), event.toString()))
-                        .or(() -> Optional.of(new State(currPQ, newShop, Optional.of(event), event.toString())));
+                        .map(e -> new State(
+                                currPQ.add(e), newShop, Optional.of(event), event.toString()))
+                        .or(() -> Optional.of(new State(
+                                //currPQ, newShop, Optional.of(event), event.toString())));
+                                currPQ, newShop, Optional.empty(), event.toString())));
                 })
-        ).or(() -> Optional.of(new State(currPQ, shop, Optional.empty(), output)));
+        //).or(() -> Optional.of(new State(currPQ, shop, Optional.empty(), output)));
+        );
+
+        //System.out.println(result);
+        return result;
     }
 
     public boolean isEmpty() {
-        return pq.isEmpty() && event.toString().isEmpty();
+        //return pq.isEmpty() && event.toString().isEmpty();
+        return pq.isEmpty() && output.isEmpty();
     }
 
     public Optional<Event> getEvent() {
